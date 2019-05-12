@@ -5,6 +5,8 @@
 #include <time.h>
 #include <stdarg.h>
 
+using namespace std;
+
 CLog::CLog()
 {
 	CSLock m_csLock;
@@ -27,8 +29,8 @@ void* CLog::AsyncWriteLog()
 	std::string signle_log;
 	while (1)
 	{
-		printf("%d\n", ~m_LogQueue.size());
-		if (m_LogQueue.size())
+		printf("%d\n", !m_LogQueue.size());
+		if (!m_LogQueue.size())
 		{
 			CSAutoLock lock(m_csLock);
 			signle_log = m_LogQueue.front();
@@ -71,7 +73,6 @@ bool CLog::init(const char* file_name, int log_buf_size, int split_lines, int ma
 	m_SplitLines = split_lines;
 	time_t t = time(NULL);
 	struct tm* sys_tm = localtime(&t);
-	//struct tm my_tm = *sys_tm;
 	const char *p = strrchr(file_name, '/');
 	char log_full_name[256] = { 0 };
 	if (p == NULL)
@@ -84,6 +85,7 @@ bool CLog::init(const char* file_name, int log_buf_size, int split_lines, int ma
 		strncpy(m_dirName,file_name, p - file_name + 1);
 		snprintf(log_full_name,255, "%d_%02d_%02d_%s", sys_tm->tm_year + 1900, sys_tm->tm_mon + 1, sys_tm->tm_mday, file_name);
 	}
+	//cout << "log_full_name: " << log_full_name << endl;
 	m_today = sys_tm->tm_mday;
 	m_fp = fopen(log_full_name, "a");
 	if (m_fp == NULL)
@@ -98,7 +100,7 @@ void CLog::write_log(int level, const char*format, ...)
 {
 	clock_t start, end;
 	start = clock();
-	time_t t = start;
+	time_t t = time(NULL);
 	struct tm* sys_tm = localtime(&t);
 	char s[16] = { 0 };
 	switch (level)
@@ -110,15 +112,18 @@ void CLog::write_log(int level, const char*format, ...)
 		default:
 			strcpy(s, "[info]:"); break;
 	}
+	cout <<"s: "<< s << endl;//////////////////////////////////
 	CSAutoLock lock(m_csLock);
 	m_count++;
+	// 对比日志时间与系统时间
 	if (m_today != sys_tm->tm_mday || m_count % m_SplitLines == 0)
 	{
 		char new_log[256] = { 0 };
-		fflush(m_fp);//!!!!
+		fflush(m_fp);
 		fclose(m_fp);
 		char tail[16] = { 0 };
 		snprintf(tail, 16, "%d_%02d_%02d_", sys_tm->tm_year + 1600, sys_tm->tm_mon + 1, sys_tm->tm_mday);
+
 		if (m_today != sys_tm->tm_mday)
 		{
 			snprintf(new_log, 255, "%s%s%s", m_dirName, tail, m_LogName);

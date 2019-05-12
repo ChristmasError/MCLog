@@ -16,7 +16,7 @@
 
 int main()
 {
-	CLog::Instance()->init("mylog.log", 100, 2000000, 10);
+	CLog::Instance()->init("mylog.log", 1000, 2000000, 10);
 	LOG_INFO("%d", 12345);
 	printf("111111111111111\n");
 	
