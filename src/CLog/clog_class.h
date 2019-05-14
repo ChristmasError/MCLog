@@ -53,6 +53,7 @@ private:
 	std::deque<std::string> m_LogQueue;
 	bool m_isAsync;
 };
+#define CREATE_LOG(log_name,log_path) CLog::LogInstance()->init(log_name,log_path);
 
 #define LOG_DEBUG(format,...) CLog::LogInstance()->write_log(DEBUG,format,__VA_ARGS__)
 #define LOG_INFO(format,...) CLog::LogInstance()->write_log(INFO,format,__VA_ARGS__)
