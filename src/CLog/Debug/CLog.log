@@ -1,1 +1,5 @@
-﻿  CLog.vcxproj -> D:\Github local repository\CLog\src\CLog\..\..\bin\CLog.exe
+﻿D:\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(445,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  CLog.cpp
+C:\Users\Christmas\Desktop\CLog\src\CLog\CLog.cpp(142,78): warning C4018: “>=”: 有符号/无符号不匹配
+C:\Users\Christmas\Desktop\CLog\src\CLog\CLog.cpp(292,25): warning C4018: “<”: 有符号/无符号不匹配
+  CLog.vcxproj -> C:\Users\Christmas\Desktop\CLog\src\CLog\../../lib\CLog.lib

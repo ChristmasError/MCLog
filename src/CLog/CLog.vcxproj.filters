@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="clog_class.h">
+    <ClInclude Include="CLog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LogBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="clog_class.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="CLog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,0 +1,10 @@
+﻿D:\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(445,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Clog.cpp
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.h(16,1): warning C4005: “ERROR”: 宏重定义
+D:\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(118): message : 参见“ERROR”的前一个定义
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.cpp(142,32): warning C4477: “snprintf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 3 拥有了类型“__int64”
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.cpp(142,32): message : 请考虑在格式字符串中使用“%lld”
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.cpp(142,32): message : 请考虑在格式字符串中使用“%Id”
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.cpp(142,32): message : 请考虑在格式字符串中使用“%I64d”
+C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\Clog.cpp(106,17): warning C4101: “end”: 未引用的局部变量
+  CLog.vcxproj -> C:\Users\Christmas\Desktop\IOCPServerModel\src\CLog\../../lib\CLog.lib
