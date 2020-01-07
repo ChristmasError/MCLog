@@ -27,7 +27,7 @@ public:
         memset(_mCacheData, 0, len);
         if (!_mCacheData)
         {
-            fprintf(stderr, "Error : no space to allocate _mCacheData\n");
+            std::cerr << "Error : no space to allocate _mCacheData\n";
             exit(1);
         }
     }
@@ -63,7 +63,7 @@ public:
         uint32_t writeLen = fwrite(_mCacheData, 1, _mUsedLen, fp);
         if (writeLen != _mUsedLen) //写入长度与缓存区文本长度不一致则判断写入文本失败
         {
-            fprintf(stderr, "Error : write log to disk error,writeLen: %u\n", writeLen);
+            std::cerr << "Error : write log to disk error,writeLen: %u\n", writeLen;
         }
     }
 

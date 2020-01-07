@@ -7,6 +7,7 @@ using namespace std;
 
 static const int gThreadsNum = 10;
 HANDLE hAllThreadsFinish = CreateSemaphore(NULL, 0, gThreadsNum, NULL);
+HANDLE hABLogFinish = CreateSemaphore(NULL, 0, 20, NULL);
 
 DWORD WINAPI writeLog(LPVOID lpParam)
 {
@@ -18,6 +19,28 @@ DWORD WINAPI writeLog(LPVOID lpParam)
 	return 0;
 }
 
+DWORD WINAPI writeLogA(LPVOID lpParam)
+{
+	for (int i = 0; i < 10000; i++)
+	{
+		WRITE_LOG("testa.txt", "aaaaaaaaaaaaaa\n");
+		//WRITE_LOG("testb.txt", "bbbbbbbbbbbbbb\n");
+	}
+	ReleaseSemaphore(hABLogFinish, 1, NULL);
+	return 0;
+}
+
+DWORD WINAPI writeLogB(LPVOID lpParam)
+{
+	for (int i = 0; i < 10000; i++)
+	{
+		WRITE_LOG("testa.txt", "AAAAAAAAAAAAAA\n");
+		//WRITE_LOG("testb.txt", "BBBBBBBBBBBBBB\n");
+	}
+	ReleaseSemaphore(hABLogFinish, 1, NULL);
+	return 0;
+}
+
 int main()
 {
 
@@ -26,6 +49,9 @@ int main()
 	//SET_LOGPATH(".\\Log_temp");
 	Sleep(3000);
 	clock_t start = clock();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/*while(i--)
 	{ 
 		WRITE_LOG("test1.txt", "111111111111\n");
@@ -60,7 +86,9 @@ int main()
 	clock_t end = clock();
 	cerr << "used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;*/
 
-	for (int i = 0; i < gThreadsNum; i++)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/*for (int i = 0; i < gThreadsNum; i++)
 	{
 		HANDLE writelogthread = CreateThread(NULL, NULL, writeLog, NULL, 0, NULL);
 		if(writelogthread!=0)
@@ -68,7 +96,26 @@ int main()
 	}
 	WaitForSingleObject(hAllThreadsFinish,INFINITE);
 	clock_t end = clock();
-	cerr << "10 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;
+	cerr << "10 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;*/
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	for (int i = 0; i < gThreadsNum; i++)
+	{
+		HANDLE writelogthread = CreateThread(NULL, NULL, writeLogA, NULL, 0, NULL);
+		if(writelogthread!=0)
+			CloseHandle(writelogthread);
+	}
+	for (int i = 0; i < gThreadsNum; i++)
+	{
+		HANDLE writelogthread = CreateThread(NULL, NULL, writeLogB, NULL, 0, NULL);
+		if (writelogthread != 0)
+			CloseHandle(writelogthread);
+	}
+	/*HANDLE ThreadA = CreateThread(NULL, NULL, writeLogA, NULL, 0, NULL);
+	HANDLE ThreadB = CreateThread(NULL, NULL, writeLogB, NULL, 0, NULL);*/
+	WaitForSingleObject(hABLogFinish, INFINITE);
+	clock_t end = clock();
+	cerr << "10 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl; 
 
 	cin.get();
 	return 0;
