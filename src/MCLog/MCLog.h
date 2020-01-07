@@ -11,9 +11,9 @@
 //单条日志长度限制        5Kb
 #define LOG_LEN_LIMIT (4 * 1024)
 //消费者线程等待信号时间   单位ms
-#define BUFF_WAIT_TIME 500
+#define BUFF_WAIT_TIME (500)
 //单缓存区长度对应宏
-#define PER_BUFFER_SIZE _mPerBufSize
+#define PER_BUFFER_SIZE (_mPerBufSize)
 
 class MCLOG_API MCLog
 {

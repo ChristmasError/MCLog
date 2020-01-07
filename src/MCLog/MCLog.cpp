@@ -93,13 +93,18 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 	char log_line[LOG_LEN_LIMIT];
 	sprintf(log_line, "%d.%d.%d-%d:%d:%d:%d %s", year, month, day, hour, minute, second, second, log_str);
 	int logStr_len = strlen(log_line);
+	if (log_line[logStr_len - 1] != '\n') //日志'\n'的缺省
+	{
+		strcat(log_line, "\n");
+		logStr_len += 1;
+	}
 
 	_mLastErrorTime = 0;
 	bool tell_back = false;
 	::EnterCriticalSection(&_hCS_CurBufferLock);
 	if (strlen(_mCurBuffer->mCurLogName) == 0)  //设定缓存区块对应日志文件名
 		memcpy(_mCurBuffer->mCurLogName, log_name, strlen(log_name) + 1);
-	//if(strstr(_mCurBuffer->mCurLogName, ".txt") == NULL)  //".txt"的缺省
+	//if(strstr(_mCurBuffer->mCurLogName, ".txt") == NULL)  //".txt"的缺省 //TODO
 	//	strcat(_mCurBuffer->mCurLogName, ".txt");
 	if (strcmp(_mCurBuffer->mCurLogName, log_name) != 0)   //对新的日志文件进行写入
 	{

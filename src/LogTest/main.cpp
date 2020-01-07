@@ -23,7 +23,7 @@ DWORD WINAPI writeLogA(LPVOID lpParam)
 {
 	for (int i = 0; i < 10000; i++)
 	{
-		WRITE_LOG("testa.txt", "aaaaaaaaaaaaaa\n");
+		WRITE_LOG("testa.txt", "aaaaaaaaaaaaaa");
 		//WRITE_LOG("testb.txt", "bbbbbbbbbbbbbb\n");
 	}
 	ReleaseSemaphore(hABLogFinish, 1, NULL);
