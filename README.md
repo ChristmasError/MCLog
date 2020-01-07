@@ -8,7 +8,7 @@ VS项目属性中分别添加"MCLog.h","MCLOG.dll","MCLOG.lib"。
 ```c++
   LOG_INIT();
 ```
-***SET_LOGPATH(log_path)***：使用该宏设置日志路径，如果不设置路径，Log文件夹将设置在根目录，即："./Log"。*目前不支持在日志系统运行时改变日志路径*;
+***SET_LOGPATH(log_path)***：使用该宏设置日志路径，如果不设置路径，Log文件夹将设置在根目录，即："./Log"。目前不支持在日志系统运行时改变日志路径;
 ```c++
   SET_LOGPATH("../../Path/LogDoc");
   SET_LOGPATH("../../Path/LogDoc/");
@@ -18,5 +18,5 @@ VS项目属性中分别添加"MCLog.h","MCLOG.dll","MCLOG.lib"。
 ```c++
   WRITE_LOG("LogFile.txt","this is log test\n");
   WRITE_LOG("LogFile.txt","this is log test");
-  //换行符可缺省，*但日志名目前不可缺省*。
+  //换行符可缺省，但日志名目前不可缺省。
 ```
