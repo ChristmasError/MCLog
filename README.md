@@ -9,22 +9,6 @@ SET_LOGPATH(log_path)：使用该宏设置日志路径，如果不设置路径�
                        示例：<h1>SET_LOGPATH("../../Path/LogDoc")</h1> 或 <h1>SET_LOGPATH("../../Path/LogDoc/")</h1>,其中'/'都可使用'\\'替代，末尾的'/''\\'可缺省;
 WRITE_LOG(log_name,log_str)：使用该宏写日志，可以在多线程环境下使用，MCLog保证线程安全。
                              示例：<h1>WRITE_LOG("LogFile.txt","this is log test\n")</h1> 或<h1> WRITE_LOG("LogFile.txt","this is log test")</h1>换行符可缺省，*但日志名目前不可缺省*。
-```html
-<!DOCTYPE html>
-<html>
-    <head>
-        <mate charest="utf-8" />
-        <meta name="keywords" content="Editor.md, Markdown, Editor" />
-        <title>Hello world!</title>
-        <style type="text/css">
-            body{font-size:14px;color:#444;font-family: "Microsoft Yahei", Tahoma, "Hiragino Sans GB", Arial;background:#fff;}
-            ul{list-style: none;}
-            img{border:none;vertical-align: middle;}
-        </style>
-    </head>
-    <body>
-        <h1 class="text-xxl">Hello world!</h1>
-        <p class="text-green">Plain text</p>
-    </body>
-</html>
+```c++
+SET_LOGPATH("../../Path/LogDoc")
 ```
