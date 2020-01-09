@@ -20,6 +20,8 @@
 #include <windows.h>
 #include <thread>
 #include <tchar.h>
+#include <map>
+#include <vector>
 #ifdef  _DEBUG
 	#include <iostream>
 #endif //  DEBUG

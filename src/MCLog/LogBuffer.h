@@ -63,7 +63,7 @@ public:
         uint32_t writeLen = fwrite(_mCacheData, 1, _mUsedLen, fp);
         if (writeLen != _mUsedLen) //写入长度与缓存区文本长度不一致则判断写入文本失败
         {
-            std::cerr << "Error : write log to disk error,writeLen: %u\n", writeLen;
+            std::cerr << "Error : write log to disk error,writeLen: "<< writeLen<<std::endl;
         }
     }
 

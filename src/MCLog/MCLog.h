@@ -6,9 +6,9 @@
 //日志默认路径：根目录\Log\当天日期\日志名，如：".\\Log\\2019-12-12(GetSystemDate()获取)\\LogName.txt",日志名的".txt"可缺省
 //自定义日志路径格式: ".\\路径\\" , ".\\路径" , "./路径" , "./路径/"
 #define LOG_DEFAULT_PATH ".\\Log\\"
-//日志文件最大大小限制    2Gb
+//日志文件最大大小限制    1Gb
 #define MEM_USE_LIMIT (1u * 1024 * 1024 * 1024)
-//单条日志长度限制        5Kb
+//单条日志长度限制        4Kb
 #define LOG_LEN_LIMIT (4 * 1024)
 //消费者线程等待信号时间   单位ms
 #define BUFF_WAIT_TIME (500)
@@ -32,6 +32,7 @@ private:
             memcpy(_mInstance->_mLogPath, LOG_DEFAULT_PATH, strlen(LOG_DEFAULT_PATH) + 1);
             _mInstance->_hWriteFileSemaphore = CreateSemaphore(NULL, 0, 1, NULL);		//初始signal状态:  unsignnal;
             ::InitializeCriticalSection(&(_mInstance->_hCS_CurBufferLock));
+            ::InitializeCriticalSection(&(_mInstance->_hCS_TempBufferLock));
             HANDLE LogConsumerThread = CreateThread(NULL, NULL, CachePersistThreadFunc, NULL, 0, NULL);
             if (LogConsumerThread != 0)
                 CloseHandle(LogConsumerThread);
@@ -45,7 +46,7 @@ public:
     void WriteLogCache(const char* log_name, const char* log_str);
 
 private:
-    LogBuffer* GetFullBuffer();
+    LogBuffer* GetRelevantBuffer(const char* log_name); //寻找一个空的缓存区
 
 private:
     MCLog();
@@ -57,6 +58,7 @@ private:
 
     HANDLE           _hWriteFileSemaphore; //某一缓存区满该信号量唤醒消费者线程进行文件写入
     CRITICAL_SECTION _hCS_CurBufferLock;   //临界区 同步_mCurBuffer
+    CRITICAL_SECTION _hCS_TempBufferLock;   //临界区 同步_mCurBuffer
     CRITICAL_SECTION _m_CSLock;
     SYSTEMTIME       _mSys;
     uint32_t         _mPid;
