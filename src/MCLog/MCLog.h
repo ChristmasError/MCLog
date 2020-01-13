@@ -9,7 +9,7 @@
 //日志文件最大大小限制    1Gb
 #define MEM_USE_LIMIT (1u * 1024 * 1024 * 1024)
 //单条日志长度限制        4Kb
-#define LOG_LEN_LIMIT (4 * 1024)
+#define PER_LOG_LEN_LIMIT (4 * 1024)
 //消费者线程等待信号时间   单位ms
 #define BUFF_WAIT_TIME (500)
 //单缓存区长度对应宏
@@ -32,7 +32,6 @@ private:
             memcpy(_mInstance->_mLogPath, LOG_DEFAULT_PATH, strlen(LOG_DEFAULT_PATH) + 1);
             _mInstance->_hWriteFileSemaphore = CreateSemaphore(NULL, 0, 1, NULL);		//初始signal状态:  unsignnal;
             ::InitializeCriticalSection(&(_mInstance->_hCS_CurBufferLock));
-            ::InitializeCriticalSection(&(_mInstance->_hCS_TempBufferLock));
             HANDLE LogConsumerThread = CreateThread(NULL, NULL, CachePersistThreadFunc, NULL, 0, NULL);
             if (LogConsumerThread != 0)
                 CloseHandle(LogConsumerThread);
@@ -43,10 +42,7 @@ public:
     //设置日志路径,不调用该函数则使用默认路径
     void SetLogPath(const char* log_path = LOG_DEFAULT_PATH);
     //将日志写入缓存
-    void WriteLogCache(const char* log_name, const char* log_str);
-
-private:
-    LogBuffer* GetRelevantBuffer(const char* log_name); //寻找一个空的缓存区
+    void LogWriteBuffer(const char* log_name, const char* log_str);
 
 private:
     MCLog();
@@ -58,8 +54,6 @@ private:
 
     HANDLE           _hWriteFileSemaphore; //某一缓存区满该信号量唤醒消费者线程进行文件写入
     CRITICAL_SECTION _hCS_CurBufferLock;   //临界区 同步_mCurBuffer
-    CRITICAL_SECTION _hCS_TempBufferLock;   //临界区 同步_mCurBuffer
-    CRITICAL_SECTION _m_CSLock;
     SYSTEMTIME       _mSys;
     uint32_t         _mPid;
     FILE* _mFp;
@@ -67,19 +61,20 @@ private:
     char* _mSysDate;            //系统日期,例:2019-12-12
     char* _mLogFileLocation;    //当且消费者线程正在写入的日志完整路径,如：".\\Log\\2019-12-12(调用FlushLogPath())\\LogName.txt"
     int              _mBufCnt;             //缓存区块数量
-    LogBuffer*       _mCurBuffer;          //当前正在写入数据的缓存区指针
-    LogBuffer*       _mSecBuffer;          //二级存区指针
+    LogBuffer*       _mCurBuffer;          //主缓存区指针,指向只在 1.缓存区满 2.缓存开始进行固化操作 
+                                           //以上两种情况才会进行顺序移动,即_mCurBuffer=_mCurBuffer->mNext
+    LogBuffer*       _mSecBuffer;          //次缓存区指针,指向可随意变更,当_mCurBuffer的日志名字与目标写入日志文件名不一致才会进行变更
     LogBuffer*       _mPrstBuffer;         //当前正在将缓存数据转录进文件的缓存区指针
-    uint64_t         _mLastErrorTime;          //日志发生错误的时间,日志正常运行值为0
+    uint64_t         _mLastErrorTime;      //日志发生错误的时间,日志正常运行值为0
 
     bool CreateFilePath(const char* log_path);
     bool OpenFile(const char* log_name);
 
-private:  //消费线程相关函数
+private:  //消费线程相关
     //消费线程函数，从缓存拿数据写入文本文件
     static DWORD WINAPI CachePersistThreadFunc(LPVOID lpParam);
     //缓存写入文本文件
-    void BufferPersist();
+    void PersistBuffer();
     //获取系统日期,例:2019-12-12
     void GetSystemDate(char* log_date);
 };
@@ -96,7 +91,7 @@ do{\
 
 #define WRITE_LOG(log_name,log_str)\
 do{\
-    MCLog::LogInstance()->WriteLogCache(log_name, log_str);\
+    MCLog::LogInstance()->LogWriteBuffer(log_name, log_str);\
 }while (0)
 
 
