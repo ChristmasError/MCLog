@@ -10,10 +10,12 @@
 #define MEM_USE_LIMIT (1u * 1024 * 1024 * 1024)
 //单条日志长度限制        4Kb
 #define PER_LOG_LEN_LIMIT (4 * 1024)
-//消费者线程等待信号时间   单位ms
+//消费者线程等待信号时间   millisecond
 #define BUFF_WAIT_TIME (500)
 //单缓存区长度对应宏
 #define PER_BUFFER_SIZE (_mPerBufSize)
+//错误发生后日志重写时间   seconds
+#define RELOG_TIME_THRESOLD (5) 
 
 class MCLOG_API MCLog
 {

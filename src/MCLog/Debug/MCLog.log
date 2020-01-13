@@ -21,5 +21,6 @@ C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(358,1): warning C4996: 'acc
 D:\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_io.h(441): message : 参见“access”的声明
 C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(360,1): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
 D:\Windows Kits\10\Include\10.0.18362.0\ucrt\direct.h(111): message : 参见“mkdir”的声明
+  LINK : 没有找到 ..\..\bin\MCLOG.dll 或上一个增量链接没有生成它；正在执行完全链接
     正在创建库 ../../bin\MCLOG.lib 和对象 ../../bin\MCLOG.exp
-LINK : fatal error LNK1114: 无法覆盖原始文件“../../bin\MCLOG.lib”；错误代码 5
+  MCLog.vcxproj -> C:\Users\Christmas\Desktop\MCLog\src\MCLog\../../bin\MCLOG.dll

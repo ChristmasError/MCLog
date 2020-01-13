@@ -72,7 +72,7 @@ void MCLog::LogWriteBuffer(const char* log_name, const char* log_str)
 	year = _mSys.wYear, month = _mSys.wMonth, day = _mSys.wDay;
 	hour = _mSys.wHour, minute = _mSys.wMinute, second = _mSys.wSecond, milli_second = _mSys.wMilliseconds;
 	
-	if (_mLastErrorTime && _mSys.wSecond - _mLastErrorTime < 5)
+	if (_mLastErrorTime && _mSys.wSecond - _mLastErrorTime < RELOG_TIME_THRESOLD)
 	{
 		return;
 	}
