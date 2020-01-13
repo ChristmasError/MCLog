@@ -11,7 +11,7 @@ HANDLE hABLogFinish = CreateSemaphore(NULL, 0, gThreadsNum*2, NULL);
 
 DWORD WINAPI writeLog(LPVOID lpParam)
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		WRITE_LOG("test10threadsa.txt", "111111111111111111111111111111111111111111111111111111111111111111111111111111\n");
 		WRITE_LOG("test10threadsb.txt", "222222222222222222222222222222222222222222222222222222222222222222222222222222\n");
@@ -22,7 +22,7 @@ DWORD WINAPI writeLog(LPVOID lpParam)
 
 DWORD WINAPI writeLogA(LPVOID lpParam)
 {
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		WRITE_LOG("testa.txt", "aaaaaaaaaaaaaa");
 		WRITE_LOG("testb.txt", "bbbbbbbbbbbbbb");
@@ -33,7 +33,7 @@ DWORD WINAPI writeLogA(LPVOID lpParam)
 
 DWORD WINAPI writeLogB(LPVOID lpParam)
 {
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		WRITE_LOG("testa.txt", "AAAAAAAAAAAAAA\n");
 		WRITE_LOG("testb.txt", "BBBBBBBBBBBBBB\n");
@@ -155,8 +155,6 @@ DWORD WINAPI writeLog10(LPVOID lpParam)
 
 int main()
 {
-
-
 	LOG_INIT();
 	//SET_LOGPATH(".\\Log_temp");
 	Sleep(3000);
@@ -211,7 +209,7 @@ int main()
 	//cerr << "10 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for (int i = 0; i < gThreadsNum; i++)
+	/*for (int i = 0; i < gThreadsNum; i++)
 	{
 		HANDLE writelogthread = CreateThread(NULL, NULL, writeLogA, NULL, 0, NULL);
 		if(writelogthread!=0)
@@ -225,23 +223,37 @@ int main()
 	}
 	WaitForSingleObject(hABLogFinish, INFINITE);
 	clock_t end = clock();
-	cerr << "20 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl; 
+	cerr << "20 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl; */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//HANDLE Thread1 = CreateThread(NULL, NULL, writeLog1, NULL, 0, NULL);
-	//HANDLE Thread2 = CreateThread(NULL, NULL, writeLog2, NULL, 0, NULL);
-	//HANDLE Thread3 = CreateThread(NULL, NULL, writeLog3, NULL, 0, NULL);
-	//HANDLE Thread4 = CreateThread(NULL, NULL, writeLog4, NULL, 0, NULL);
-	//HANDLE Thread5 = CreateThread(NULL, NULL, writeLog5, NULL, 0, NULL);
-	//HANDLE Thread6 = CreateThread(NULL, NULL, writeLog6, NULL, 0, NULL);
-	//HANDLE Thread7 = CreateThread(NULL, NULL, writeLog7, NULL, 0, NULL);
-	//HANDLE Thread8 = CreateThread(NULL, NULL, writeLog8, NULL, 0, NULL);
-	//HANDLE Thread9 = CreateThread(NULL, NULL, writeLog9, NULL, 0, NULL);
-	//HANDLE Thread10 = CreateThread(NULL, NULL, writeLog10, NULL, 0, NULL);
-	//WaitForSingleObject(hTenLogFinish, INFINITE);
-	//clock_t end = clock();
-	//cerr << "20 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;
+	HANDLE Thread1 = CreateThread(NULL, NULL, writeLog1, NULL, 0, NULL);
+	HANDLE Thread2 = CreateThread(NULL, NULL, writeLog2, NULL, 0, NULL);
+	HANDLE Thread3 = CreateThread(NULL, NULL, writeLog3, NULL, 0, NULL);
+	HANDLE Thread4 = CreateThread(NULL, NULL, writeLog4, NULL, 0, NULL);
+	HANDLE Thread5 = CreateThread(NULL, NULL, writeLog5, NULL, 0, NULL);
+	HANDLE Thread6 = CreateThread(NULL, NULL, writeLog6, NULL, 0, NULL);
+	HANDLE Thread7 = CreateThread(NULL, NULL, writeLog7, NULL, 0, NULL);
+	HANDLE Thread8 = CreateThread(NULL, NULL, writeLog8, NULL, 0, NULL);
+	HANDLE Thread9 = CreateThread(NULL, NULL, writeLog9, NULL, 0, NULL);
+	HANDLE Thread10 = CreateThread(NULL, NULL, writeLog10, NULL, 0, NULL);
+	WaitForSingleObject(hTenLogFinish, INFINITE);
+	clock_t end = clock();
+	cerr << "20 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;
+	cin.get();
+	 Thread1 = CreateThread(NULL, NULL, writeLog1, NULL, 0, NULL);
+	 Thread2 = CreateThread(NULL, NULL, writeLog2, NULL, 0, NULL);
+	 Thread3 = CreateThread(NULL, NULL, writeLog3, NULL, 0, NULL);
+	 Thread4 = CreateThread(NULL, NULL, writeLog4, NULL, 0, NULL);
+	 Thread5 = CreateThread(NULL, NULL, writeLog5, NULL, 0, NULL);
+	 Thread6 = CreateThread(NULL, NULL, writeLog6, NULL, 0, NULL);
+	 Thread7 = CreateThread(NULL, NULL, writeLog7, NULL, 0, NULL);
+	 Thread8 = CreateThread(NULL, NULL, writeLog8, NULL, 0, NULL);
+	 Thread9 = CreateThread(NULL, NULL, writeLog9, NULL, 0, NULL);
+	 Thread10 = CreateThread(NULL, NULL, writeLog10, NULL, 0, NULL);
+	WaitForSingleObject(hTenLogFinish, INFINITE);
+	 end = clock();
+	cerr << "20 threads 1000 times 100 byte logs used time: " << (double)(end - start) / CLOCKS_PER_SEC << "seconds" << endl;
 
 	cin.get();
 	return 0;

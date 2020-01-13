@@ -14,7 +14,7 @@ MCLog::MCLog()
 	memset(_mSysDate, 0, 11);
 	memset(_mLogFileLocation, 0, MAX_PATH);
 	_mFp = NULL;
-	_mBufCnt = 5;
+	_mBufCnt = 3;
 	_mLastErrorTime = 0;
 	uint32_t a = MEM_USE_LIMIT;
 	LogBuffer* head = new LogBuffer(PER_BUFFER_SIZE);
@@ -90,19 +90,45 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 	_mLastErrorTime = 0;
 	bool tell_back = false;
 	::EnterCriticalSection(&_hCS_CurBufferLock);
+	LogBuffer* ptpppemp_buf = _mCurBuffer;
 	if (strlen(_mCurBuffer->mCurLogName) == 0)  //设定缓存区块对应日志文件名
 		memcpy(_mCurBuffer->mCurLogName, log_name, strlen(log_name) + 1);
 
 	if (strcmp(_mCurBuffer->mCurLogName, log_name) != 0)   //_mCurBuffer->mCurLogName != log_name
 	{
-		LogBuffer* ptemp_buf = GetRelevantBuffer(log_name);
-		if (ptemp_buf != NULL) //有合适缓存区
+		//LogBuffer* ptemp_buf = GetRelevantBuffer(log_name);
+		_mSecBuffer = _mCurBuffer->mNext;
+		LogBuffer* temp_curBuf = _mCurBuffer;
+		bool isfind = false;
+		while (_mSecBuffer != _mCurBuffer)
 		{
-			if (ptemp_buf->Empty())
-				memcpy(ptemp_buf->mCurLogName, log_name, strlen(log_name) + 1);
-			ptemp_buf->AppendLog(log_line, logStr_len);
+			if (strcmp(_mSecBuffer->mCurLogName, log_name) == 0 && _mSecBuffer->AvailableLen() > LOG_LEN_LIMIT
+				&& _mSecBuffer->mStatus == LogBuffer::FREE)
+			{
+				isfind = true;
+				break;
+			}
+			else if (_mSecBuffer->Empty())
+			{
+				isfind = true;
+				memcpy(_mSecBuffer->mCurLogName, log_name, strlen(log_name) + 1);
+				break;
+			}
+			_mSecBuffer = _mSecBuffer->mNext;
 		}
-		else //ptemp_buf == NULL
+
+		if (isfind) //有合适缓存区
+		{
+			if (_mSecBuffer->mStatus == LogBuffer::FREE && _mSecBuffer->AvailableLen() >= logStr_len)
+			{
+				_mSecBuffer->AppendLog(log_line, logStr_len);
+			}
+			else
+			{
+				std::cerr << "Full buffer\n" << std::endl;
+			}
+		}
+		else //isfind == false
 		{
 			if (PER_BUFFER_SIZE * (_mBufCnt + 1) > MEM_USE_LIMIT) //日志文件>=日志最大大小限制
 			{
@@ -112,31 +138,21 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 			}
 			else
 			{
-				/*LogBuffer* prev_buf = _mCurBuffer->mPrev;
-				LogBuffer* pnew_buf = new LogBuffer(PER_BUFFER_SIZE);
-				pnew_buf->mPrev = prev_buf;
-				prev_buf->mNext = pnew_buf;
-				pnew_buf->mNext = _mCurBuffer;
-				_mCurBuffer->mPrev = pnew_buf;
-				_mBufCnt += 1;
-				ptemp_buf = pnew_buf;
-				std::cerr << _mBufCnt << std::endl;
-				memcpy(ptemp_buf->mCurLogName, log_name, strlen(log_name) + 1);
-				ptemp_buf->AppendLog(log_line, logStr_len);*/
 				LogBuffer* pnext_buf = _mCurBuffer->mNext;
-				ptemp_buf = new LogBuffer(PER_BUFFER_SIZE);
-				ptemp_buf->mPrev = _mCurBuffer;
-				_mCurBuffer->mNext = ptemp_buf;
-				ptemp_buf->mNext = pnext_buf;
-				pnext_buf->mPrev = ptemp_buf;
+				LogBuffer* pnew_buf = new LogBuffer(PER_BUFFER_SIZE);
+				pnew_buf->mPrev = _mCurBuffer;
+				_mCurBuffer->mNext = pnew_buf;
+				pnew_buf->mNext = pnext_buf;
+				pnext_buf->mPrev = pnew_buf;
+				_mSecBuffer = pnew_buf;
 				_mBufCnt += 1;
 				std::cerr << _mBufCnt << std::endl;
-				memcpy(ptemp_buf->mCurLogName, log_name, strlen(log_name) + 1);
-				ptemp_buf->AppendLog(log_line, logStr_len);
+				memcpy(_mSecBuffer->mCurLogName, log_name, strlen(log_name) + 1);
+				_mSecBuffer->AppendLog(log_line, logStr_len);
 			}
 		}
 	}
-	else //_mCurBuffer->mCurLogName == log_name
+	else if(strcmp(_mCurBuffer->mCurLogName , log_name)==0) //同名日志文件写同一个缓存区
 	{
 		if (_mCurBuffer->mStatus == LogBuffer::FREE && _mCurBuffer->AvailableLen() >= logStr_len)
 		{
@@ -144,13 +160,14 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 		}
 		else // (buffer->mStatus = FREE but Buffer->AvailableLen() is not enough) || ( Buffer->mStatus = FULL)
 		{
+			
 			if (_mCurBuffer->mStatus == LogBuffer::FREE)
 			{
-				_mCurBuffer->mStatus = LogBuffer::FULL; //set FULL
-				LogBuffer* pnext_buf = _mCurBuffer->mNext;
+				_mCurBuffer->mStatus = LogBuffer::FULL; //set FULL				
 				tell_back = true;
+				LogBuffer* pnext_buf = _mCurBuffer->mNext;
 
-				if (pnext_buf->mStatus == LogBuffer::FULL)
+				if (pnext_buf->mStatus == LogBuffer::FULL) 
 				{
 					if (PER_BUFFER_SIZE * (_mBufCnt + 1) > MEM_USE_LIMIT) //日志文件>=日志最大大小限制
 					{
@@ -176,9 +193,52 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 					_mCurBuffer = pnext_buf;
 				}
 
+				bool isfind = false;
+				bool different_target = false;
+				// Check whether the current log name is consistent with the target write file name
+				if (strcmp(log_name, _mCurBuffer->mCurLogName) != 0) 
+				{
+					different_target = true;
+					_mSecBuffer = _mCurBuffer->mNext;
+					while (_mSecBuffer != _mCurBuffer)//find a appropriate buffer
+					{
+						if (strcmp(log_name, _mSecBuffer->mCurLogName) == 0 && _mSecBuffer->AvailableLen() > logStr_len&& _mSecBuffer->mStatus == LogBuffer::FREE)
+						{
+							isfind = true;
+							break;
+						}
+						_mSecBuffer = _mSecBuffer->mNext;
+					}
+					if (isfind == false) //无合适缓存区
+					{
+						if (PER_BUFFER_SIZE * (_mBufCnt + 1) > MEM_USE_LIMIT) 
+						{
+							std::cerr << "Error : no more log space can use\n";
+							_mCurBuffer = pnext_buf;
+							_mLastErrorTime = _mSys.wSecond;
+						}
+						else
+						{
+							LogBuffer* pnext_buf = _mCurBuffer->mNext;
+							LogBuffer* pnew_buf = new LogBuffer(PER_BUFFER_SIZE);
+							pnew_buf->mPrev = _mCurBuffer;
+							_mCurBuffer->mNext = pnew_buf;
+							pnew_buf->mNext = pnext_buf;
+							pnext_buf->mPrev = pnew_buf;
+							_mSecBuffer = pnew_buf;
+							_mBufCnt += 1;
+							std::cerr << _mBufCnt << std::endl;
+							memcpy(_mSecBuffer->mCurLogName, log_name, strlen(log_name) + 1);
+						}
+					}
+				}
+				
 				if (!_mLastErrorTime)
 				{
-					_mCurBuffer->AppendLog(log_line, logStr_len);
+					if(!different_target)
+						_mCurBuffer->AppendLog(log_line, logStr_len);
+					else
+						_mSecBuffer->AppendLog(log_line, logStr_len);
 				}
 			}
 			else
@@ -186,6 +246,12 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 				_mLastErrorTime = _mSys.wSecond;
 			}
 		}
+	}
+	else
+	{
+		std::cerr << "!!!!!!!!!!!!!!!!!!" << std::endl;
+		std::cin.get();
+		
 	}
 	::LeaveCriticalSection(&_hCS_CurBufferLock);
  
@@ -197,8 +263,10 @@ void MCLog::WriteLogCache(const char* log_name, const char* log_str)
 
 LogBuffer* MCLog::GetRelevantBuffer(const char* log_name)
 {
+	//::EnterCriticalSection(&_hCS_CurBufferLock);
 	LogBuffer* temp_next = _mCurBuffer->mNext;
 	LogBuffer* temp_curBuf = _mCurBuffer;
+	//::LeaveCriticalSection(&_hCS_CurBufferLock);
 	bool isfind = false;
 	while (temp_next != temp_curBuf)
 	{
@@ -210,6 +278,7 @@ LogBuffer* MCLog::GetRelevantBuffer(const char* log_name)
 		else if (temp_next->Empty())
 		{
 			isfind = true;
+			memcpy(temp_next->mCurLogName, log_name, strlen(log_name) + 1);
 			break;
 		}
 		temp_next = temp_next->mNext;
@@ -259,7 +328,7 @@ void MCLog::BufferPersist()
 			std::cerr << "Error : open log file failed.\n";
 			continue;
 		}
-
+		
 		_mPrstBuffer->WriteFile(_mFp);
 		fflush(_mFp);
 		::EnterCriticalSection(&_hCS_CurBufferLock);

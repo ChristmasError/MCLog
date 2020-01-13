@@ -1,23 +1,4 @@
 ﻿D:\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(445,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  MCLog.cpp
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(46,1): warning C4996: 'getpid': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getpid. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\process.h(360): message : 参见“getpid”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(65,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 参见“strcat”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(141,78): warning C4018: “>=”: 有符号/无符号不匹配
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(83,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 参见“sprintf”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(86,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 参见“strcat”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(284,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 参见“sprintf”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(291,1): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(208): message : 参见“fopen”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(301,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 参见“sprintf”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(314,25): warning C4018: “<”: 有符号/无符号不匹配
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(319,1): warning C4996: 'access': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _access. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_io.h(441): message : 参见“access”的声明
-C:\Users\Christmas\Desktop\MCLog\src\MCLog\MCLog.cpp(321,1): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
-D:\Windows Kits\10\Include\10.0.18362.0\ucrt\direct.h(111): message : 参见“mkdir”的声明
+  LINK : 没有找到 ..\..\bin\MCLOG.dll 或上一个增量链接没有生成它；正在执行完全链接
+    正在创建库 ../../bin\MCLOG.lib 和对象 ../../bin\MCLOG.exp
   MCLog.vcxproj -> C:\Users\Christmas\Desktop\MCLog\src\MCLog\../../bin\MCLOG.dll

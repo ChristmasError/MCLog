@@ -68,6 +68,7 @@ private:
     char* _mLogFileLocation;    //当且消费者线程正在写入的日志完整路径,如：".\\Log\\2019-12-12(调用FlushLogPath())\\LogName.txt"
     int              _mBufCnt;             //缓存区块数量
     LogBuffer*       _mCurBuffer;          //当前正在写入数据的缓存区指针
+    LogBuffer*       _mSecBuffer;          //二级存区指针
     LogBuffer*       _mPrstBuffer;         //当前正在将缓存数据转录进文件的缓存区指针
     uint64_t         _mLastErrorTime;          //日志发生错误的时间,日志正常运行值为0
 
