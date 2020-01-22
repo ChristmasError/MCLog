@@ -52,8 +52,6 @@ public:
 
     void AppendLog(const char* log_line, uint32_t len)
     {
-        if (strcmp(this->mCurLogName,"testa.txt")==0)
-          assert(log_line[len-2] != 'b');
         if (AvailableLen() < len)
             return;
         memcpy(_mCacheData + _mUsedLen, log_line, len);

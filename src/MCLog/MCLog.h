@@ -55,7 +55,7 @@ private:
     static uint32_t  _mPerBufSize;         //单缓存区长度大小 1024 * 1024 == 1Mb
 
     HANDLE           _hWriteFileSemaphore; //某一缓存区满该信号量唤醒消费者线程进行文件写入
-    CRITICAL_SECTION _hCS_CurBufferLock;   //临界区 同步_mCurBuffer
+    CRITICAL_SECTION _hCS_CurBufferLock;   //临界区 同步_mCurBuffer,_mSecBuffer
     SYSTEMTIME       _mSys;
     uint32_t         _mPid;
     FILE* _mFp;
